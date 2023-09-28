@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 import JWT from "jsonwebtoken";
 import MailService from "./MailService";
 import InMemoryUsuarioRepository from "../repositories/in-memory/InMemoryUsuarioRepository";
 
 import { gerarCodigo } from "./helpers/AuthHelper";
+
+dotenv.config()
 
 const mailService = new MailService();
 const inMemoryUsuarioRepository = new InMemoryUsuarioRepository();
@@ -27,25 +30,31 @@ class AuthService {
         const codigo = gerarCodigo();
         inMemoryUsuarioRepository.salvarToken(email, codigo);
 
-        const resultado = await mailService.execute(
-            "naoresponda@xgrow.com.br", 
-            "vitormanoelacd777@gmail.com", 
-            "Chegou seu código de acesso", 
-            `<b>Olá, ${dadosUsuario.nome}!<b/>
-            <br/>
+        if(process.env.ENVIRONMENT === "production") {
 
-            <p>Chegou seu código de acesso!</p>
+            //só enviar e-mails em produção
 
-            <br/>
+            const resultado = await mailService.execute(
+                "naoresponda@xgrow.com.br", 
+                "vitormanoelacd777@gmail.com", 
+                "Chegou seu código de acesso", 
+                `<b>Olá, ${dadosUsuario.nome}!<b/>
+                <br/>
+    
+                <p>Chegou seu código de acesso!</p>
+    
+                <br/>
+    
+                <b>${codigo}</b>
+    
+                <br/><br/>
+    
+                Atenciosamente,<br/>
+                XGrow
+                `  
+            )
+        }
 
-            <b>${codigo}</b>
-
-            <br/><br/>
-
-            Atenciosamente,<br/>
-            XGrow
-            `  
-        )
 
         
 
