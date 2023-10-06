@@ -35,8 +35,8 @@ class AuthService {
             //só enviar e-mails em produção
 
             const resultado = await mailService.execute(
-                "naoresponda@xgrow.com.br", 
-                "vitormanoelacd777@gmail.com", 
+                "naoresponda@empresa.com.br", 
+                "vitor@gmail.com", 
                 "Chegou seu código de acesso", 
                 `<b>Olá, ${dadosUsuario.nome}!<b/>
                 <br/>
@@ -50,7 +50,7 @@ class AuthService {
                 <br/><br/>
     
                 Atenciosamente,<br/>
-                XGrow
+                Equipe tal
                 `  
             )
         }
